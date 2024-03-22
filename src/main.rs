@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"]
+﻿#![windows_subsystem = "windows"]
 use std::{env, fs, io};
 use std::fs::{DirEntry, OpenOptions};
 use std::io::Write;
@@ -59,6 +59,7 @@ fn main() {
     message2log(&log_file, String::from("Expecting more arguments {normal|hide} program-to-run arguments"));
     process::exit(3);
   }
+  env::args().nth(0);
   let environment: Regex = Regex::new("%([0-9A-Za-z_()]*)%").unwrap_or_else( |err| { message2log(&log_file, format!("Regex error: {err}")); process::exit(1); } );
   let exec = expand_variables(&arguments[2], &log_file, &environment);
   let window_type = &arguments[1];
@@ -70,7 +71,7 @@ fn main() {
   for arg in &arguments[3..] { new_process.arg(arg); }
   let mut line_arguments: String = "".to_owned();
   for argument in new_process.get_args().collect::<Vec<_>>().iter() {
-    let mut parameter:String = argument.to_os_string().into_string().unwrap();
+    let mut parameter:String = expand_variables(&argument.to_os_string().into_string().unwrap(), &log_file, &environment);
     if parameter.find(" ").is_some() { parameter = format!("{}{}{}", '"', parameter, '"'); }
     line_arguments = format!("{}{}{}", line_arguments, expand_variables(&parameter, &log_file, &environment), ' ');
   }
