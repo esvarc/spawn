@@ -68,7 +68,7 @@ fn main() {
   let mut new_process = process::Command::new(exec.clone());
   new_process.env(r"SEE_MASK_NOZONECHECKS", r"1");
   if window_type.eq_ignore_ascii_case(&String::from("hide")) { new_process.creation_flags(NO_WINDOW); }
-  for arg in &arguments[3..] { new_process.arg(arg); }
+  for arg in &arguments[3..] { new_process.arg(expand_variables(arg, &log_file, &environment)); }
   let mut line_arguments: String = "".to_owned();
   for argument in new_process.get_args().collect::<Vec<_>>().iter() {
     let mut parameter:String = expand_variables(&argument.to_os_string().into_string().unwrap(), &log_file, &environment);
