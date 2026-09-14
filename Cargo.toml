@@ -9,6 +9,7 @@ edition = "2021"
 chrono = "0.4.34"
 regex = "1.10.3"
 log = "0.4.21"
+winres = "0.1.12"
 
 [build-dependencies]
 winres = "0.1.12"
